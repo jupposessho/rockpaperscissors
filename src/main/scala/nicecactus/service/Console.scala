@@ -1,9 +1,10 @@
 package nicecactus.service
 
-import scala.io.StdIn.readLine
-import nicecactus.lib.IO
+trait Console[F[_]] {
+  def putStrLn(line: String): F[Unit]
+  def getStrLn: F[String]
+}
 
 object Console {
-  def putStrLn(line: String): IO[Unit] = IO(() => println(line))
-  def getStrLn: IO[String] = IO(() => readLine())
+  def apply[F[_]](implicit F: Console[F]): Console[F] = F
 }

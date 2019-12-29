@@ -7,8 +7,8 @@ class WeaponSpec extends WordSpecLike with Matchers {
 
   "beats" should {
 
-    val tieCases = List(Rock, Paper, Scissors)
-    val trueCases = List((Rock, Scissors), (Paper, Rock), (Scissors, Paper))
+    val tieCases = Rock :: Paper :: Scissors :: Nil
+    val trueCases = (Rock, Scissors) :: (Paper, Rock) :: (Scissors, Paper) :: Nil
     val allCases = tieCases.map(c => ((c, c), None)) ++
       trueCases.map(c => (c, Some(true))) ++
       trueCases.map(c => (c.swap, Some(false))) ++
@@ -18,30 +18,30 @@ class WeaponSpec extends WordSpecLike with Matchers {
       allCases foreach {
         case ((weapon, otherWeapon), result) =>
           s"$weapon beats $otherWeapon is $result" in {
-            weapon beats otherWeapon shouldEqual result
+            weapon beats otherWeapon shouldBe result
           }
       }
     }
   }
 
   "apply" should {
-    List((1, Rock), (2, Paper), (3, Scissors)) foreach {
+    (1, Rock) :: (2, Paper) :: (3, Scissors) :: Nil foreach {
       case (move, weapon) =>
         s"create a $weapon from a valid move: $move" in {
-          Weapon(move) shouldEqual Some(weapon)
+          Weapon(move) shouldBe Some(weapon)
         }
     }
 
     "return None" when {
       "move is invalid" in {
-        Weapon(0) shouldEqual None
+        Weapon(0) shouldBe None
       }
     }
   }
 
   "numberOfWeapons" should {
     "return the number of available weapons: 3" in {
-      numberOfWeapons shouldEqual 3
+      numberOfWeapons shouldBe 3
     }
   }
 }

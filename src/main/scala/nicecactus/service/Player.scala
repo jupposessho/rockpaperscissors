@@ -1,34 +1,42 @@
 package nicecactus.service
 
-import nicecactus.lib.IO
+import nicecactus.lib.Program
+import nicecactus.lib.Program.syntax._
 import nicecactus.model.Weapon
 import Console._
 import scala.util.Try
 
 trait Player[F[_]] {
   def selectWeapon(): F[Option[Weapon]]
+  def name(): String
 }
 
-class HumanPlayer(name: String) extends Player[IO] {
+class HumanPlayer[F[_]: Program: Console](name: String) extends Player[F] {
 
-  override def selectWeapon(): IO[Option[Weapon]] =
+  override def selectWeapon(): F[Option[Weapon]] =
     for {
-      _ <- putStrLn(s"Dear $name, please select your weapon:")
-      _ <- putStrLn("1 - Rock")
-      _ <- putStrLn("2 - Paper")
-      _ <- putStrLn("3 - Scissors")
-      input <- getStrLn
+      _ <- Console[F].putStrLn(s"Dear $name, please select your weapon:")
+      _ <- Console[F].putStrLn("1 - Rock")
+      _ <- Console[F].putStrLn("2 - Paper")
+      _ <- Console[F].putStrLn("3 - Scissors")
+      input <- Console[F].getStrLn
       weapon = parseInt(input).flatMap(Weapon.apply)
     } yield weapon
 
-  private def parseInt(s: String): Option[Int] = Try(s.toInt).toOption
+  override def name(): String = name
+
+  private def parseInt(i: String): Option[Int] = Try(i.toInt).toOption
 }
 
-class ComputerPlayer(name: String) extends Player[IO] {
+class ComputerPlayer[F[_]: Program: Console: Random](name: String) extends Player[F] {
 
-  override def selectWeapon(): IO[Option[Weapon]] =
-    nextInt(Weapon.numberOfWeapons).map(_ + 1).map(Weapon.apply)
+  override def selectWeapon(): F[Option[Weapon]] =
+    nextInt(Weapon.numberOfWeapons)
+      .map(_ + 1)
+      .map(Weapon.apply)
 
-  private def nextInt(upper: Int): IO[Int] =
-    IO(() => scala.util.Random.nextInt(upper))
+  override def name(): String = name
+
+  private def nextInt(upper: Int): F[Int] =
+    Random[F].nextInt(upper)
 }
