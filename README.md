@@ -1,6 +1,9 @@
 # Rock Paper Scissors game
 
 This is an implementation of the Rock Paper Scissors game: [Description](https://en.wikipedia.org/wiki/Rock_paper_scissors)
+I used the algorithm, based on parity:
+"Rankings in rock paper scissors Spock lizard may be modeled by a comparison of the parity of the two choices. If it is the same (two odd-numbered moves or two even-numbered ones) then the lower number wins, while if they are different (one odd and one even) the higher wins."
+
 Due to the library restrictions some boilerplate had to be implemented(/nicecactus.lib). That IO could be replace by any modern effect system like Cats IO, Monix Task or ZIO. A Monad instance could be used for replacing Program and State monad for replacing TestIO.
 
 ## To run the program
@@ -18,4 +21,4 @@ Due to the library restrictions some boilerplate had to be implemented(/nicecact
 
 The new weapons must be added in nicecactus.model.Weapon and the numberOfWeapons value should be increased by the number of the added weapons.
 
-To display the new available weapons to the human player, the nicecactus.service.HumanPlayer::selectWeapon method should be modified.
+To display the new available weapons to the human player, the nicecactus.service.HumanPlayer::selectWeapon method should be extended.
